@@ -1,396 +1,561 @@
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plan alimentaire 7 jours</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font-sans);-webkit-text-size-adjust:100%}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-.tab-bar{display:flex;gap:6px;flex-wrap:wrap;padding:.75rem 0;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:1rem}
-.tab{padding:8px 14px;border-radius:20px;font-size:13px;border:.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-secondary);min-height:36px;white-space:nowrap}
-.tab.on{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary);font-weight:500}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-text-size-adjust:100%;background:#f5f5f7;color:#1d1d1f;padding-bottom:40px}
+.header{background:#fff;padding:16px 16px 12px;border-bottom:1px solid #e5e5e7;position:sticky;top:0;z-index:100}
+.header h1{font-size:17px;font-weight:600;color:#1d1d1f;margin-bottom:2px}
+.header p{font-size:12px;color:#86868b}
+.tab-bar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px 8px;background:#fff;border-bottom:1px solid #e5e5e7;position:sticky;top:57px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{padding:7px 13px;border-radius:20px;font-size:12px;border:1px solid #d1d1d6;background:transparent;cursor:pointer;color:#636366;min-height:34px;white-space:nowrap;font-weight:400;flex-shrink:0}
+.tab.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f;font-weight:500}
 .tab.t-batch{border-color:#0F6E56;color:#0F6E56}.tab.t-batch.on{background:#0F6E56;color:#fff}
-.tab.t-shop{border-color:#185FA5;color:#185FA5}.tab.t-shop.on{background:#185FA5;color:#fff}
-.view{display:none}.view.on{display:block}
+.tab.t-stock{border-color:#185FA5;color:#185FA5}.tab.t-stock.on{background:#185FA5;color:#fff}
+.tab.t-shop{border-color:#7B3FA0;color:#7B3FA0}.tab.t-shop.on{background:#7B3FA0;color:#fff}
+.view{display:none;padding:12px}.view.on{display:block}
+.day-label{font-size:11px;color:#86868b;margin-bottom:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
 .meals{display:flex;flex-direction:column;gap:10px}
-.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .card.bk{border-left:3px solid #1D9E75;border-radius:0 12px 12px 0}
-.card-top{padding:14px 16px;cursor:pointer;-webkit-user-select:none;user-select:none}
-.card-top:active{background:var(--color-background-secondary)}
-.row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.mlabel{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary)}
-.mname{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
-.mdesc{font-size:13px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:10px}
-.macros{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.mac{font-size:12px;padding:3px 8px;border-radius:20px}
-.mp{background:#E6F1FB;color:#0C447C}.mc{background:#EAF3DE;color:#27500A}
-.mf{background:#FAEEDA;color:#633806}.mk{background:#F1EFE8;color:#444441}
-.pill-row{display:flex;gap:6px;flex-wrap:wrap}
-.pill{font-size:12px;padding:5px 11px;border-radius:20px;border:.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-secondary);min-height:32px;-webkit-user-select:none;user-select:none}
-.pill:active{background:var(--color-background-secondary)}
-.pill.precipe{color:#0F6E56;border-color:#5DCAA5}
-.pill.pswap{color:#633806;border-color:#EF9F27}
-.pill.pbadge{color:#085041;border-color:#5DCAA5;background:#E1F5EE;cursor:default}
-.pill.pbatch{color:#633806;border-color:#EF9F27;background:#FAEEDA;cursor:default}
-.pill.pprep{cursor:default}
-.panel{display:none;border-top:.5px solid var(--color-border-tertiary);padding:14px 16px;background:var(--color-background-secondary)}
+.card.dinner2{border-left:3px solid #E07B2A;border-radius:0 12px 12px 0}
+.card-top{padding:13px 14px}
+.mrow{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px;gap:6px}
+.mlabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#86868b}
+.badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.mname{font-size:14px;font-weight:600;color:#1d1d1f;margin-bottom:3px;line-height:1.3}
+.mdesc{font-size:12px;color:#636366;line-height:1.5;margin-bottom:9px}
+.macros{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px}
+.mac{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.mp{background:#EFF6FF;color:#1D4ED8}.mc{background:#ECFDF5;color:#065F46}
+.mf{background:#FFF7ED;color:#9A3412}.mk{background:#F5F3FF;color:#4C1D95}
+.pill-row{display:flex;gap:5px;flex-wrap:wrap}
+.pill{font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid #d1d1d6;background:transparent;cursor:pointer;color:#636366;min-height:30px;font-weight:400}
+.pill.pr{color:#0F6E56;border-color:#5DCAA5}.pill.ps{color:#7B3FA0;border-color:#C49EDB}
+.pill.psauce{color:#3730A3;border-color:#A5B4FC}
+.pill.pbadge{color:#065F46;border-color:#5DCAA5;background:#ECFDF5;cursor:default;font-size:10px}
+.pill.p2{color:#9A3412;border-color:#FCA87F;background:#FFF7ED;cursor:default;font-size:10px}
+.panel{display:none;border-top:1px solid #f2f2f7;padding:13px 14px;background:#fafafa}
 .panel.on{display:block}
-.panel+.panel{border-top:.5px solid var(--color-border-secondary)}
-.ptitle{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);margin-bottom:8px}
-.ilist{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
-.ilist li{font-size:13px;color:var(--color-text-secondary);padding-left:14px;position:relative;line-height:1.5}
-.ilist li::before{content:"·";position:absolute;left:0;color:var(--color-text-tertiary)}
-.slist{list-style:none;display:flex;flex-direction:column;gap:10px}
-.slist li{font-size:13px;color:var(--color-text-secondary);padding-left:26px;position:relative;line-height:1.6}
-.snum{position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:50%;background:#E1F5EE;color:#085041;font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center}
-.swaplist{display:flex;flex-direction:column;gap:6px}
-.swapitem{font-size:13px;color:var(--color-text-secondary);line-height:1.5;padding-left:14px;position:relative}
-.swapitem::before{content:"→";position:absolute;left:0;color:#0F6E56;font-size:12px}
-.totals{display:flex;gap:6px;margin-top:1rem;padding:.75rem;background:var(--color-background-secondary);border-radius:8px;flex-wrap:wrap}
-.ti{display:flex;flex-direction:column;flex:1;min-width:55px}
-.tl{font-size:11px;color:var(--color-text-tertiary)}.tv{font-size:15px;font-weight:500;color:var(--color-text-primary)}
-.tip{background:#E1F5EE;border:.5px solid #5DCAA5;border-radius:8px;padding:.75rem 1rem;margin-bottom:1rem;font-size:13px;color:#085041;line-height:1.6}
-.bsec{margin-bottom:1.5rem}
-.btitle{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;padding-bottom:6px;border-bottom:.5px solid var(--color-border-tertiary)}
-.bc{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:12px;padding:14px 16px;margin-bottom:8px}
-.bct{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
-.bcd{font-size:13px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:8px}
-.tags{display:flex;gap:6px;flex-wrap:wrap}
-.utag{font-size:11px;padding:2px 9px;border-radius:20px;background:#EEEDFE;color:#3C3489;border:.5px solid #AFA9EC}
-.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding:.75rem;background:var(--color-background-secondary);border-radius:8px}
-.prog-bar{flex:1;height:6px;background:var(--color-border-tertiary);border-radius:3px;overflow:hidden}
+.ptitle{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#86868b;margin-bottom:8px}
+.ilist{list-style:none;margin-bottom:13px}
+.ilist li{font-size:12px;color:#3d3d3f;padding-left:13px;position:relative;line-height:1.6;margin-bottom:2px}
+.ilist li::before{content:"·";position:absolute;left:0;color:#86868b}
+.slist{list-style:none}
+.slist li{font-size:12px;color:#3d3d3f;padding-left:24px;position:relative;line-height:1.6;margin-bottom:8px}
+.snum{position:absolute;left:0;top:2px;width:17px;height:17px;border-radius:50%;background:#ECFDF5;color:#065F46;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sauce-list{display:flex;flex-direction:column;gap:7px}
+.sauce-item{background:#fff;border:1px solid #E0E0F0;border-radius:8px;padding:9px 11px}
+.sauce-name{font-size:12px;font-weight:600;color:#3730A3;margin-bottom:2px}
+.sauce-desc{font-size:11px;color:#636366;line-height:1.5}
+.swaplist{display:flex;flex-direction:column;gap:5px}
+.swapitem{font-size:12px;color:#3d3d3f;padding-left:14px;position:relative;line-height:1.5}
+.swapitem::before{content:"→";position:absolute;left:0;color:#0F6E56;font-size:11px}
+.totals{display:flex;gap:6px;margin-top:10px;padding:10px 12px;background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);flex-wrap:wrap}
+.ti{display:flex;flex-direction:column;flex:1;min-width:52px}
+.tl{font-size:10px;color:#86868b}.tv{font-size:14px;font-weight:600;color:#1d1d1f}
+/* BATCH */
+.tip{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:#064E3B;line-height:1.6}
+.bsec{margin-bottom:12px}
+.bc{background:#fff;border-radius:12px;padding:13px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.bct{font-size:13px;font-weight:600;color:#1d1d1f;margin-bottom:4px}
+.bcd{font-size:12px;color:#636366;line-height:1.5;margin-bottom:10px}
+.bsteps{list-style:none}
+.bsteps li{font-size:12px;color:#3d3d3f;padding-left:24px;position:relative;line-height:1.6;margin-bottom:7px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.utag{font-size:10px;padding:2px 8px;border-radius:20px;background:#EDE9FE;color:#4C1D95;border:1px solid #C4B5FD}
+/* STOCK */
+.stock-hdr{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:#1E3A5F;line-height:1.6}
+.scat-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#86868b;padding:10px 0 5px;border-bottom:1px solid #f2f2f7;margin-bottom:2px}
+.stock-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #f9f9f9;min-height:48px}
+.stock-row:last-child{border-bottom:none}
+.stock-left{flex:1}
+.stock-name{font-size:13px;color:#1d1d1f;font-weight:400;line-height:1.3;margin-bottom:4px}
+.prog-mini{height:4px;border-radius:2px;background:#e5e5ea;overflow:hidden;width:100%;max-width:140px}
+.prog-mini-fill{height:100%;border-radius:2px;transition:width .3s,background .3s}
+.stock-ctrl{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.sc-btn{width:30px;height:30px;border-radius:50%;border:1px solid #d1d1d6;background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1d1d1f;flex-shrink:0;line-height:1}
+.sc-btn:active{background:#f2f2f7}
+.sc-val{font-size:12px;font-weight:600;color:#1d1d1f;min-width:40px;text-align:center;line-height:1.2}
+.sc-unit{font-size:10px;color:#86868b;text-align:center}
+.sc-val.low{color:#DC2626}.sc-val.empty{color:#86868b;text-decoration:line-through}
+/* SHOP */
+.shop-alert{background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:11px 13px;margin-bottom:10px;font-size:12px;color:#9A3412;line-height:1.6}
+.shop-ok{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:11px 13px;margin-bottom:10px;font-size:12px;color:#064E3B;line-height:1.6}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.prog-bar{flex:1;height:6px;background:#e5e5ea;border-radius:3px;overflow:hidden}
 .prog-fill{height:100%;background:#1D9E75;border-radius:3px;transition:width .2s}
-.prog-txt{font-size:12px;color:var(--color-text-secondary);white-space:nowrap}
-.clr-btn{font-size:12px;color:var(--color-text-tertiary);border:none;background:none;cursor:pointer;padding:2px 6px;min-height:28px}
-.scat{margin-bottom:1.25rem}
-.scat-title{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);padding:.5rem 0 .4rem;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:4px}
-.sitem{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:.5px solid var(--color-border-tertiary);cursor:pointer;-webkit-user-select:none;user-select:none;min-height:44px}
+.prog-txt{font-size:11px;color:#636366;white-space:nowrap}
+.clr-btn{font-size:11px;color:#86868b;border:none;background:none;cursor:pointer;padding:2px 6px;min-height:26px}
+.shop-cat-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#86868b;padding:10px 0 5px;border-bottom:1px solid #f2f2f7;margin-bottom:2px}
+.sitem{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f9f9f9;cursor:pointer;min-height:48px}
 .sitem:last-child{border-bottom:none}
-.sitem:active{background:var(--color-background-secondary)}
-.scb{width:22px;height:22px;border-radius:5px;border:.5px solid var(--color-border-secondary);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.sitem:active{opacity:.7}
+.scb{width:23px;height:23px;border-radius:6px;border:1.5px solid #d1d1d6;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff}
 .scb.on{background:#1D9E75;border-color:#1D9E75}
 .scb.on::after{content:'';display:block;width:12px;height:8px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
-.stxt{font-size:14px;color:var(--color-text-primary);flex:1;line-height:1.4}
-.stxt.done{color:var(--color-text-tertiary);text-decoration:line-through}
-.sqty{font-size:12px;color:var(--color-text-tertiary);white-space:nowrap}
+.stxt{font-size:13px;color:#1d1d1f;flex:1;line-height:1.4}
+.stxt.done{color:#c7c7cc;text-decoration:line-through}
+.sqty{font-size:11px;color:#86868b;white-space:nowrap}
+.badge-urgent{font-size:10px;padding:2px 7px;border-radius:20px;background:#FEE2E2;color:#991B1B;border:1px solid #FECACA;white-space:nowrap;margin-right:4px}
+.badge-soon{font-size:10px;padding:2px 7px;border-radius:20px;background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;white-space:nowrap;margin-right:4px}
 </style>
+</head>
+<body>
 
-<h2 class="sr-only">Plan alimentaire 7 jours avec recettes, substitutions, liste de courses cochable et planning batch cook</h2>
+<div class="header">
+  <h1>Plan alimentaire — 7 jours</h1>
+  <p>178g protéines · ~2 300 kcal · Dîners pour 2</p>
+</div>
 
 <div class="tab-bar" id="tabs"></div>
 <div id="cont"></div>
 
 <script>
-const D=[
-{n:'Lun',meals:[
-{l:'Petit-dej',n:'Overnight oats',d:'Préparé dim soir. Sortir du frigo, manger directement.',b:'nocook',pr:'0 min',p:36,c:58,f:8,k:460,
-ing:['80g flocons d\'avoine','200g yaourt grec 0%','100ml lait écrémé','1 càs graines de chia','Myrtilles'],
-steps:['La veille : mélanger flocons, yaourt, lait et chia dans un bocal.','Fermer, réfrigérer toute la nuit.','Matin : ajouter les fruits et manger.'],
-sw:['Myrtilles → fraises, framboises ou banane','Lait → lait d\'avoine ou d\'amande','+ 1 dose whey dans le yaourt pour +25g protéines']},
-{l:'Déjeuner',n:'Bowl poulet & riz',d:'Poulet batch, riz, concombre, huile d\'olive, citron.',b:'batch',pr:'5 min',p:50,c:45,f:8,k:460,
-ing:['200g blanc de poulet batch','150g riz cuit','½ concombre','1 càs huile d\'olive','½ citron','Sel, poivre'],
-steps:['Sortir le poulet batch, trancher.','Chauffer le riz 2 min micro-ondes.','Dresser, assaisonner huile + citron.'],
-sw:['Poulet → dinde batch ou thon en boîte','Riz → quinoa ou riz complet','Concombre → tomates cerises']},
-{l:'Collation',n:'Fromage blanc + galettes',d:'200g fromage blanc 0%, 2 galettes de riz, poivre.',b:'nocook',pr:'2 min',p:28,c:14,f:3,k:195,
-ing:['200g fromage blanc 0%','2 galettes de riz','Poivre noir'],
-steps:['Sortir le fromage blanc.','Poivrer.','Servir avec les galettes.'],
-sw:['Fromage blanc → yaourt grec','Galettes → 3 crackers seigle','+ ½ dose whey pour +15g protéines']},
-{l:'Dîner',n:'Saumon + brocolis vapeur',d:'180g saumon au four, 200g brocolis.',b:'',pr:'20 min',p:44,c:12,f:20,k:400,
-ing:['180g pavé de saumon','200g brocolis','2 gousses d\'ail','1 citron','1 càs huile d\'olive','Thym, sel, poivre'],
-steps:['Four à 200°C.','Saumon sur plaque avec huile, ail, sel, poivre. Enfourner 12–14 min.','Brocolis vapeur 5–7 min.','Servir avec citron.'],
-sw:['Saumon → cabillaud ou sole tropicale','Brocolis → haricots verts ou épinards','Huile → sauce soja légère']},
-]},
-{n:'Mar',meals:[
-{l:'Petit-dej',n:'Yaourt grec + whey + banane',d:'200g yaourt, 1 dose whey, banane, cannelle.',b:'nocook',pr:'90 sec',p:45,c:28,f:4,k:330,
-ing:['200g yaourt grec 0%','1 dose whey (30g)','1 banane','Cannelle'],
-steps:['Verser le yaourt.','Ajouter la whey, mélanger à la fourchette.','Trancher la banane, saupoudrer de cannelle.'],
-sw:['Banane → pomme ou mangue','Whey → fromage blanc + cannelle']},
-{l:'Déjeuner',n:'Bowl dinde batch + quinoa',d:'200g dinde hachée batch, 150g quinoa, tomates cerises.',b:'batch',pr:'5 min',p:50,c:42,f:9,k:455,
-ing:['200g dinde hachée batch','150g quinoa cuit','Tomates cerises','Sel, poivre'],
-steps:['Réchauffer dinde + quinoa 2 min micro-ondes.','Tomates cerises en deux.','Dresser, assaisonner.'],
-sw:['Dinde → poulet batch','Quinoa → riz ou lentilles']},
-{l:'Collation',n:'Œufs durs + amandes',d:'3 œufs durs batch, 25g amandes.',b:'batch',pr:'0 min',p:24,c:4,f:18,k:270,
-ing:['3 œufs durs batch','25g amandes nature'],
-steps:['Sortir les œufs du frigo, peler.','Manger avec les amandes.'],
-sw:['Amandes → noix ou noix de cajou','+ 100g fromage blanc pour +12g protéines']},
-{l:'Dîner',n:'Cabillaud sauté aux légumes',d:'200g cabillaud, poivrons, courgette, sauce soja, riz.',b:'',pr:'20 min',p:44,c:40,f:8,k:410,
-ing:['200g filet de cabillaud','2 poivrons','1 courgette','2 càs sauce soja','1 càc gingembre','1 gousse d\'ail','1 càs huile d\'olive','120g riz cuit'],
-steps:['Chauffer huile dans wok à feu vif.','Faire revenir ail + gingembre 30 sec.','Ajouter légumes 3–4 min.','Ajouter cabillaud en morceaux, cuire 3–4 min.','Sauce soja, servir sur riz.'],
-sw:['Cabillaud → sole tropicale ou lieu noir','Riz → nouilles de riz','Sauce soja → citron + herbes']},
-]},
-{n:'Mer',meals:[
-{l:'Petit-dej',n:'Overnight oats',d:'Préparé mar soir — restock mi-semaine.',b:'nocook',pr:'0 min',p:36,c:58,f:8,k:460,
-ing:['80g flocons d\'avoine','200g yaourt grec 0%','100ml lait écrémé','1 càs graines de chia','Fruits rouges'],
-steps:['Mardi soir : mélanger flocons, yaourt, lait et chia.','Réfrigérer toute la nuit.','Matin : ajouter les fruits.'],
-sw:['Fruits rouges → banane ou pomme','+ 1 dose whey pour bocal enrichi']},
-{l:'Déjeuner',n:'Dinde hachée + patate douce',d:'200g dinde, cumin, 1 patate douce.',b:'',pr:'20 min',p:48,c:42,f:9,k:440,
-ing:['200g dinde hachée','1 patate douce','1 oignon','2 gousses d\'ail','1 càc cumin','1 càs huile d\'olive','Sel, poivre'],
-steps:['Patate douce au micro-ondes 7–8 min.','Faire revenir oignon dans huile 3 min.','Ail + cumin 30 sec, puis dinde 8–10 min.','Assaisonner, servir avec la patate douce.'],
-sw:['Dinde → poulet haché ou bœuf 5%','Patate douce → riz complet','Cumin → paprika fumé']},
-{l:'Collation',n:'Fromage blanc + whey',d:'200g fromage blanc, ½ dose whey, cannelle.',b:'nocook',pr:'90 sec',p:32,c:8,f:4,k:200,
-ing:['200g fromage blanc 0%','½ dose whey (15g)','Cannelle'],
-steps:['Mélanger fromage blanc et whey.','Saupoudrer de cannelle.'],
-sw:['Fromage blanc → yaourt grec']},
-{l:'Dîner',n:'Sole tropicale + lentilles',d:'200g sole au four, 150g lentilles vertes, ail, citron.',b:'',pr:'25 min',p:48,c:30,f:7,k:375,
-ing:['200g filets de sole tropicale','150g lentilles vertes (boîte)','2 gousses d\'ail','1 càs huile d\'olive','Thym, laurier','½ citron','Sel, poivre'],
-steps:['Four à 200°C.','Sole sur papier cuisson, sel, poivre, thym. Enfourner 12 min.','Lentilles égouttées + ail + huile dans casserole, chauffer 3 min.','Assaisonner lentilles, citron. Servir le poisson dessus.'],
-sw:['Sole → cabillaud, lieu noir ou merlu','Lentilles → pois chiches ou haricots blancs']},
-]},
-{n:'Jeu',meals:[
-{l:'Petit-dej',n:'Thon + galettes de riz',d:'1 boîte thon, citron, poivre, 3 galettes.',b:'nocook',pr:'2 min',p:30,c:18,f:2,k:210,
-ing:['1 boîte thon au naturel (120g)','3 galettes de riz','½ citron','Poivre noir'],
-steps:['Égoutter le thon.','Presser citron, poivrer, mélanger.','Déposer sur les galettes.'],
-sw:['Thon → saumon en boîte','Galettes → pain de seigle','+ 1 càs fromage blanc pour texture crémeuse']},
-{l:'Déjeuner',n:'Wrap poulet batch',d:'Poulet batch, tortilla, salade, avocat, yaourt grec.',b:'batch',pr:'5 min',p:50,c:36,f:16,k:480,
-ing:['200g blanc de poulet batch','1 tortilla blé complet','Feuilles de salade','½ avocat','2 càs yaourt grec','Sel, poivre'],
-steps:['Étaler le yaourt grec sur la tortilla.','Ajouter salade, poulet tranché, avocat.','Saler, poivrer, rouler.'],
-sw:['Poulet → thon ou dinde batch','Avocat → ½ càs tahini + concombre','Tortilla → feuille de laitue (low-carb)']},
-{l:'Collation',n:'Yaourt grec + fruits rouges',d:'200g yaourt, fruits rouges, miel.',b:'nocook',pr:'1 min',p:20,c:22,f:1,k:180,
-ing:['200g yaourt grec 0%','1 poignée fruits rouges','1 càc miel'],
-steps:['Verser le yaourt.','Ajouter fruits et miel.'],
-sw:['Miel → 1 càc beurre d\'amande','+ ½ dose whey pour +15g protéines']},
-{l:'Dîner',n:'Sole tropicale + légumes sautés',d:'220g sole, légumes surgelés, sauce soja, riz jasmin.',b:'',pr:'15 min',p:42,c:44,f:6,k:400,
-ing:['220g filets de sole tropicale','500g mélange légumes surgelés','2 càs sauce soja','1 càs huile d\'olive','2 gousses d\'ail','120g riz jasmin cuit'],
-steps:['Cuire le riz.','Chauffer huile dans wok, ail 30 sec.','Légumes surgelés à feu vif, 4–5 min.','Poser la sole sur les légumes, couvrir 3–4 min.','Arroser de sauce soja, servir sur riz.'],
-sw:['Sole → cabillaud ou lieu noir','Sauce soja → teriyaki léger ou citron + gingembre']},
-]},
-{n:'Ven',meals:[
-{l:'Petit-dej',n:'Fromage blanc + banane',d:'250g fromage blanc, 1 banane, cannelle.',b:'nocook',pr:'1 min',p:32,c:28,f:4,k:280,
-ing:['250g fromage blanc 0%','1 banane','Cannelle'],
-steps:['Verser le fromage blanc.','Couper la banane en rondelles.','Saupoudrer de cannelle.'],
-sw:['Banane → pomme ou poire','Fromage blanc → yaourt grec']},
-{l:'Déjeuner',n:'Salade bowl poulet batch',d:'Poulet batch, salade, pois chiches, huile d\'olive.',b:'batch',pr:'5 min',p:50,c:30,f:10,k:415,
-ing:['200g blanc de poulet batch','Salade mélangée','80g pois chiches égouttés','Tomates cerises','1 càs huile d\'olive','Sel, poivre'],
-steps:['Sortir le poulet, trancher.','Dresser salade dans un bol.','Ajouter poulet, pois chiches, tomates.','Huile + sel + poivre.'],
-sw:['Poulet → thon ou saumon en boîte','Pois chiches → edamame ou lentilles']},
-{l:'Collation',n:'Œufs durs',d:'3 œufs durs batch. Grab and go.',b:'batch',pr:'0 min',p:19,c:1,f:12,k:186,
-ing:['3 œufs durs batch','Sel'],
-steps:['Sortir du frigo.','Peler et manger.'],
-sw:['+ 100g fromage blanc pour +12g protéines','2 càs houmous en trempette']},
-{l:'Dîner',n:'Cuisses de poulet + légumes rôtis',d:'200g cuisses désossées, courgette, poivrons, oignon, thym.',b:'',pr:'30 min',p:44,c:16,f:14,k:370,
-ing:['200g cuisses de poulet désossées sans peau','1 courgette','2 poivrons','1 oignon rouge','1 càs huile d\'olive','Thym, sel, poivre'],
-steps:['Four à 200°C.','Légumes + huile + sel + thym sur plaque.','Cuisses de poulet par-dessus, assaisonner.','Enfourner 25–30 min, retourner à mi-cuisson.'],
-sw:['Cuisses → blanc de poulet (20 min)','Légumes → champignons + aubergine','Thym → romarin']},
-]},
-{n:'Sam',meals:[
-{l:'Petit-dej',n:'Saumon fumé + fromage blanc',d:'80g saumon fumé, 200g fromage blanc, citron, galette.',b:'nocook',pr:'2 min',p:38,c:6,f:10,k:270,
-ing:['80g saumon fumé','200g fromage blanc 0%','½ citron','1 galette de riz'],
-steps:['Dresser le fromage blanc.','Poser le saumon à côté.','Citron pressé par-dessus, galette de riz.'],
-sw:['Saumon fumé → truite fumée ou thon en boîte','Fromage blanc → yaourt grec','Galette → pain de seigle']},
-{l:'Déjeuner',n:'Bowl saumon boîte + quinoa',d:'170g saumon en boîte, quinoa, edamame, avocat, tahini.',b:'',pr:'10 min',p:52,c:38,f:18,k:530,
-ing:['170g saumon en boîte','150g quinoa cuit','80g edamame cuit','½ avocat','1 càs tahiné','1 càs jus de citron','Sel, poivre'],
-steps:['Cuire l\'edamame 3 min eau bouillante.','Mélanger tahiné + citron + 1 càs eau.','Dresser : quinoa, saumon, edamame, avocat.','Arroser de sauce tahini.'],
-sw:['Saumon → thon en boîte ou cabillaud cuit','Edamame → pois chiches','Tahini → houmous']},
-{l:'Collation',n:'Yaourt grec + whey + fruits',d:'150g yaourt, ½ dose whey, fruits rouges.',b:'nocook',pr:'90 sec',p:30,c:14,f:3,k:205,
-ing:['150g yaourt grec 0%','½ dose whey (15g)','Fruits rouges'],
-steps:['Mélanger yaourt et whey.','Ajouter les fruits.'],
-sw:['Yaourt → fromage blanc','Fruits rouges → kiwi ou banane']},
-{l:'Dîner',n:'Steaks hachés + patate douce',d:'2×100g bœuf haché 5%, salade, quartiers patate douce.',b:'',pr:'20 min',p:46,c:36,f:16,k:476,
-ing:['200g bœuf haché 5% MG','1 patate douce','Salade mélangée','1 càs huile d\'olive','Sel, poivre, herbes de Provence'],
-steps:['Four à 200°C. Patate douce en quartiers, huile, sel. Enfourner 20–25 min.','Former 2 steaks, assaisonner.','Poêle chaude, 3–4 min chaque côté.','Servir avec salade et quartiers.'],
-sw:['Bœuf → steaks de dinde hachée','Patate douce → pommes de terre']},
-]},
-{n:'Dim',meals:[
-{l:'Petit-dej',n:'Yaourt + flocons + fruits',d:'200g yaourt, 40g flocons crus (ramollissent en 5 min), fruits, miel.',b:'nocook',pr:'2 min',p:28,c:48,f:5,k:350,
-ing:['200g yaourt grec 0%','40g flocons d\'avoine','Fruits rouges','1 càc miel'],
-steps:['Mélanger flocons dans le yaourt.','Laisser reposer 5 min.','Ajouter fruits et miel.'],
-sw:['Miel → banane écrasée','+ 30g noix pour version plus rassasiante']},
-{l:'Batch cook',n:'Session batch — voir onglet Batch',d:'~60–75 min. Couvre tous les repas batch de la semaine.',b:'batch',pr:'60–75 min',p:0,c:0,f:0,k:0,ing:[],steps:[],sw:[]},
-{l:'Déjeuner',n:'Dinde batch (1ère portion)',d:'Première portion dinde batch du jour, quinoa, légumes.',b:'batch',pr:'0 min',p:54,c:42,f:10,k:470,
-ing:['200g dinde hachée batch','150g quinoa cuit','Légumes rôtis'],
-steps:['Première portion de la dinde batch.','Dresser avec quinoa et légumes.'],
-sw:['Dinde → poulet batch']},
-{l:'Dîner',n:'Poulet rôti + légumes racines',d:'220g blanc de poulet, carottes, panais, pommes de terre.',b:'',pr:'35 min',p:54,c:40,f:8,k:460,
-ing:['220g blanc de poulet','4 carottes','3 panais','400g pommes de terre','Romarin, ail','1 càs huile d\'olive','Sel, poivre'],
-steps:['Four à 200°C.','Légumes en morceaux + huile + romarin + ail sur plaque. Enfourner 10 min.','Ajouter le poulet assaisonné, cuire encore 25–30 min.','Laisser reposer 5 min.'],
-sw:['Blanc → cuisses désossées (plus moelleux)','Panais → patate douce','Romarin → thym']},
-]},
-];
-
-const BP={
-sun:[
-{t:'Blanc de poulet — 800g',d:'Sel, poivre, ail en poudre. Four 200°C, 25 min. Trancher, 4 portions 200g. Frigo 4 jours.',u:['Lun déj','Jeu wrap','Ven salade']},
-{t:'Dinde hachée — 600g',d:'Oignon, ail, tomates concassées, cumin, herbes. 3 portions. Frigo 4 jours.',u:['Mar déj','Mer option','Dim déj']},
-{t:'Œufs durs — 8 œufs',d:'Eau froide → ébullition → 10 min → eau glacée. Boîte hermétique. Frigo 5 jours.',u:['Mar collation','Ven collation','Grab-and-go']},
-{t:'Quinoa — 400g sec',d:'Rincer. 2× volume d\'eau, 15 min frémissement. Égrainer. Frigo 5 jours.',u:['Mar déj','Sam déj']},
-{t:'Bocaux overnight oats — ×2',d:'80g flocons + 200g yaourt + 100ml lait + 1 càs chia. Réfrigérer. Prêts lun + mar.',u:['Lun petit-dej','Mar petit-dej']},
-],
-wed:[
-{t:'Œufs durs — 6 œufs',d:'Restock jeu–ven. Même méthode que dimanche.',u:['Jeu grab-and-go','Ven collation']},
-{t:'Bocaux overnight oats — ×2',d:'Restock pour mer + jeu matin.',u:['Mer petit-dej','Jeu option']},
-{t:'Riz — 300g sec',d:'Cuire une grande quantité pour jeu + ven. Frigo 4 jours.',u:['Jeu dîner','Ven bol']},
-]
+// ─── STOCK ────────────────────────────────────────────────────────────────────
+// [current, max, unit, category, display_name]
+const STOCK = {
+  blanc_poulet:     [1250,2500,'g','Protéines','Blanc de poulet'],
+  hache_boeuf:      [1000,1000,'g','Protéines','Haché bœuf 5%'],
+  escalope_dinde:   [1000,1000,'g','Protéines','Escalope de dinde'],
+  cabillaud:        [600, 600, 'g','Protéines','Filet de cabillaud'],
+  saumon_fume:      [560, 560, 'g','Protéines','Saumon fumé'],
+  thon_nature:      [4,   4,  'boîtes','Protéines','Thon au naturel'],
+  thon_tomate:      [2,   2,  'boîtes','Protéines','Thon à la tomate'],
+  poulet_fume:      [10,  10, 'tranches','Protéines','Poulet fumé'],
+  oeufs:            [24,  24, 'unités','Protéines','Œufs'],
+  skyr:             [850, 850,'g','Laitiers','Yaourt skyr'],
+  fromage_blanc:    [1000,1000,'g','Laitiers','Fromage blanc 0%'],
+  yaourts_prot:     [6,   6,  'pots','Laitiers','Yaourts protéinés'],
+  riz:              [400, 1000,'g','Féculents','Riz basmati (sec)'],
+  quinoa:           [300, 300,'g','Féculents','Quinoa (sec)'],
+  nouilles_riz:     [500, 500,'g','Féculents','Nouilles de riz'],
+  flocons:          [1000,1000,'g','Féculents','Flocons d\'avoine'],
+  wraps:            [8,   8,  'unités','Féculents','Wraps blé complet'],
+  pommes_terre:     [2000,2000,'g','Légumes','Pommes de terre'],
+  patate_douce:     [4,   4,  'unités','Légumes','Patates douces'],
+  poivrons:         [4,   4,  'unités','Légumes','Poivrons'],
+  legumes_rustiques:[750, 2250,'g','Légumes','Légumes rustiques surgelés'],
+  salade:           [400, 400,'g','Légumes','Salade mélangée'],
+  tomates_cerises:  [500, 500,'g','Légumes','Tomates cerises'],
+  pois_chiches:     [500, 500,'g','Légumineuses','Pois chiches'],
+  lentilles:        [500, 500,'g','Légumineuses','Lentilles'],
+  haricots_blancs:  [500, 500,'g','Légumineuses','Haricots blancs'],
+  amandes:          [500, 500,'g','Oléagineux','Amandes'],
+  noix:             [500, 500,'g','Oléagineux','Noix'],
+  bananes:          [14,  14, 'unités','Fruits','Bananes'],
+  fraises:          [500, 500,'g','Fruits','Fraises'],
+};
+const STEP={
+  blanc_poulet:200,hache_boeuf:200,escalope_dinde:200,cabillaud:100,saumon_fume:100,
+  thon_nature:1,thon_tomate:1,poulet_fume:1,oeufs:1,skyr:100,fromage_blanc:100,
+  yaourts_prot:1,riz:100,quinoa:50,nouilles_riz:100,flocons:100,wraps:1,
+  pommes_terre:200,patate_douce:1,poivrons:1,legumes_rustiques:200,salade:50,
+  tomates_cerises:100,pois_chiches:100,lentilles:100,haricots_blancs:100,
+  amandes:50,noix:50,bananes:1,fraises:100
 };
 
-const SHOP=[
-{cat:'Viandes & poissons',items:[
-{n:'Blanc de poulet',q:'1,4 kg'},{n:'Cuisses de poulet désossées sans peau',q:'400 g'},
-{n:'Dinde hachée',q:'600 g'},{n:'Bœuf haché 5% MG',q:'200 g'},
-{n:'Pavé de saumon',q:'350 g'},{n:'Filets de sole tropicale',q:'420 g'},
-{n:'Filet de cabillaud',q:'400 g'},{n:'Saumon fumé',q:'160 g'},
-{n:'Bacon de dinde tranché',q:'200 g'},
+// ─── DAYS ─────────────────────────────────────────────────────────────────────
+const DAYS=[
+{n:'J1',label:'Jour 1 — Lundi',meals:[
+{l:'Petit-dej',bk:true,nocook:true,n:'Overnight oats banane + amandes',d:'Préparé la veille. Bocal à sortir du frigo.',p:38,c:60,f:12,k:500,
+ing:['80g flocons d\'avoine','200ml lait','100g fromage blanc 0%','1 banane tranchée','20g amandes'],
+steps:['La veille au soir : verser flocons, lait et fromage blanc dans un bocal. Mélanger avec une fourchette jusqu\'à homogénéité.','Fermer le bocal, placer au frigo.','Matin : sortir du frigo, ajouter la banane tranchée et les amandes. Manger directement dans le bocal.'],
+sauces:[],sw:['Fromage blanc → skyr ou yaourt protéiné','Amandes → noix','Banane → fraises ou mûres']},
+{l:'Déjeuner',bk:false,nocook:false,n:'Bowl poulet + riz + légumes rustiques',d:'200g poulet, riz basmati, légumes sautés, sauce soja-sésame.',p:52,c:48,f:9,k:490,
+ing:['200g blanc de poulet','150g riz basmati cuit (du batch)','200g légumes rustiques surgelés','2 gousses ail','1 càs sauce soja','½ càc huile sésame','1 càs huile olive'],
+steps:['Sortir le riz du batch ou cuire : rincer, 1:1.5 eau, 12 min feu doux, reposer 5 min.','Poêle chaude avec huile olive. Ail 30 sec, puis légumes surgelés à feu vif 5–6 min.','Cuire le poulet séparément 4–5 min chaque côté. Saler, poivrer. Reposer 2 min, trancher.','Dresser riz, légumes, poulet. Arroser de sauce.'],
+sauces:[{n:'Soja-sésame',d:'1 càs soja + ½ càc huile sésame + 1 càc miel. Mélanger.'},{n:'Tahiné-citron',d:'1 càs tahiné + jus ½ citron + 2 càs eau + sel. Fouetter.'},{n:'Citron-herbes',d:'Jus 1 citron + 1 càs huile olive + herbes. Verser crue.'}],
+sw:['Poulet → thon ou dinde','Riz → quinoa']},
+{l:'Collation',bk:false,nocook:true,n:'Yaourt protéiné + myrtilles + noix',d:'1 yaourt protéiné, myrtilles, 20g noix.',p:24,c:18,f:10,k:258,
+ing:['1 yaourt protéiné (190g)','Myrtilles','20g noix'],
+steps:['Verser le yaourt. Ajouter myrtilles et noix.'],
+sauces:[],sw:['Yaourt prot. → skyr','Myrtilles → fraises']},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:false,n:'Haché bœuf + patates douces + poivrons rôtis',d:'Pour 2. 300g bœuf, 2 patates douces, 2 poivrons.',p:48,c:40,f:14,k:478,
+ing:['300g haché bœuf 5%','2 patates douces en cubes','2 poivrons en lanières','1 oignon rouge','2 gousses ail','Paprika, cumin, sel, poivre','1 càs huile olive'],
+steps:['Four à 200°C.','Mélanger patates douces + poivrons + oignon + ail sur plaque. Huile + sel + paprika. Enfourner 25 min, retourner à mi-cuisson.','Former 2 steaks ou émietter le bœuf dans poêle très chaude. 8 min. Saler, cumin.','Dresser légumes rôtis + bœuf. Arroser de sauce.'],
+sauces:[{n:'Tahiné-ail',d:'2 càs tahiné + 1 gousse ail râpée + jus ½ citron + 3 càs eau + sel. Fouetter.'},{n:'Soja-sésame-miel',d:'1 càs soja + ½ càc sésame + ½ càc miel. Badigeonner le bœuf.'},{n:'Fromage blanc-ail-herbes',d:'3 càs fromage blanc + ail râpé + persil + jus ½ citron + sel.'}],
+sw:['Bœuf → dinde hachée','Patate douce → pommes de terre']},
 ]},
-{cat:'Œufs & produits laitiers',items:[
-{n:'Œufs frais (L)',q:'×18'},{n:'Yaourt grec 0% nature',q:'1,5 kg'},
-{n:'Fromage blanc 0%',q:'1 kg'},{n:'Lait demi-écrémé',q:'500 ml'},
+{n:'J2',label:'Jour 2 — Mardi',meals:[
+{l:'Petit-dej',bk:true,nocook:false,n:'Flocons chauds + fraises + amandes',d:'80g flocons, lait chaud, fraises, amandes.',p:22,c:58,f:14,k:450,
+ing:['80g flocons d\'avoine','300ml lait','100g fraises tranchées','25g amandes'],
+steps:['Porter le lait à frémissement.','Ajouter les flocons, remuer 3–4 min à feu doux.','Verser, ajouter fraises et amandes.'],
+sauces:[],sw:['Fraises → banane ou mûres']},
+{l:'Déjeuner',bk:false,nocook:false,n:'Wrap dinde + salade + tomates',d:'2 wraps, 200g dinde grillée, salade, sauce.',p:50,c:40,f:10,k:455,
+ing:['200g escalope de dinde','2 wraps blé complet','Salade mélangée','100g tomates cerises','Sel, poivre, paprika','1 càs huile olive'],
+steps:['Poêle chaude + huile. Dinde assaisonnée (sel, poivre, paprika). 4–5 min chaque côté.','Reposer 2 min, trancher en lanières.','Étaler sauce sur wrap. Salade, dinde, tomates. Rouler en repliant les côtés.'],
+sauces:[{n:'Tahiné-citron',d:'1 càs tahiné + jus ½ citron + 1 càs eau + sel.'},{n:'Fromage blanc-moutarde',d:'2 càs fromage blanc + ½ càc moutarde + sel + poivre.'},{n:'Soja-sésame',d:'1 càc soja + ½ càc sésame + ½ càc miel. Badigeonner la dinde.'}],
+sw:['Dinde → poulet fumé (no-cook)','Tomates → concombre']},
+{l:'Collation',bk:false,nocook:true,n:'Thon nature + noix + galettes',d:'1 boîte thon, 25g noix, 2 galettes.',p:32,c:14,f:14,k:310,
+ing:['1 boîte thon nature (190g)','25g noix','2 galettes de riz'],
+steps:['Égoutter le thon, poivrer. Servir avec noix et galettes.'],
+sauces:[{n:'Citron',d:'Jus ½ citron + sel. Mélanger avec le thon.'}],
+sw:['Thon → thon à la tomate']},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:false,n:'Cabillaud + pommes de terre rôties + légumes',d:'Pour 2. 300g cabillaud, pommes de terre, légumes surgelés.',p:46,c:42,f:7,k:420,
+ing:['300g filet cabillaud','400g pommes de terre en cubes','250g légumes rustiques surgelés','2 gousses ail','Thym, sel, poivre','1 càs huile olive'],
+steps:['Four à 200°C. Pommes de terre + ail + thym + huile sur plaque. Enfourner 20 min.','Légumes surgelés à la poêle 5 min pendant ce temps.','Ajouter le cabillaud assaisonné sur la plaque, enfourner 12–14 min.','Poisson cuit quand il se défait facilement. Ne pas surcuire.'],
+sauces:[{n:'Vierge citron-persil',d:'1 càs huile olive + jus 1 citron + persil haché + sel. Verser crue.'},{n:'Soja-sésame-gingembre',d:'1 càs soja + ½ càc sésame + ½ càc gingembre.'},{n:'Fromage blanc-citron',d:'3 càs fromage blanc + jus ½ citron + herbes + sel.'}],
+sw:['Cabillaud → sole tropicale (même temps)']},
 ]},
-{cat:'Conserves & épicerie',items:[
-{n:'Thon en boîte au naturel (120g)',q:'×5'},{n:'Saumon en boîte (170g)',q:'×2'},
-{n:'Pois chiches en boîte',q:'×1'},{n:'Lentilles vertes en boîte',q:'×1'},
-{n:'Edamame surgelé',q:'240 g'},{n:'Mélange légumes surgelés',q:'500 g'},
+{n:'J3',label:'Jour 3 — Mercredi',meals:[
+{l:'Petit-dej',bk:true,nocook:true,n:'Overnight oats + mûres + noix',d:'Préparé mar soir. Flocons, lait, fromage blanc, mûres, noix.',p:36,c:58,f:16,k:520,
+ing:['80g flocons d\'avoine','200ml lait','100g fromage blanc 0%','Mûres','25g noix'],
+steps:['Mardi soir : flocons + lait + fromage blanc dans bocal. Réfrigérer.','Matin : mûres + noix.'],
+sauces:[],sw:['Mûres → myrtilles ou fraises']},
+{l:'Déjeuner',bk:false,nocook:false,n:'Bowl thon + quinoa + tomates + tahiné',d:'190g thon, quinoa, tomates, salade, sauce tahiné.',p:48,c:44,f:10,k:460,
+ing:['1 boîte thon nature (190g)','150g quinoa sec (batch → ~350g cuit)','100g tomates cerises','Salade mélangée','2 càs tahiné'],
+steps:['Rincer le quinoa. 2× volume eau, 15 min frémissement, reposer 5 min, égrainer.','Préparer sauce tahiné.','Dresser quinoa tiède, thon, tomates, salade. Napper.'],
+sauces:[{n:'Tahiné-soja-citron',d:'2 càs tahiné + 1 càc soja + jus ½ citron + 3 càs eau + sel. Fouetter.'},{n:'Vinaigrette sésame',d:'1 càs soja + ½ càc huile sésame + jus ½ citron.'}],
+sw:['Thon → poulet fumé','Quinoa → riz batch']},
+{l:'Collation',bk:false,nocook:true,n:'Yaourt protéiné + banane + amandes',d:'1 yaourt protéiné, 1 banane, 20g amandes.',p:26,c:32,f:10,k:322,
+ing:['1 yaourt protéiné','1 banane','20g amandes'],
+steps:['Verser le yaourt. Banane + amandes.'],
+sauces:[],sw:[]},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:false,n:'Escalope de dinde + lentilles + oignons caramélisés',d:'Pour 2. 350g dinde, lentilles, oignons.',p:54,c:38,f:8,k:448,
+ing:['350g escalope de dinde','200g lentilles (boîte égouttée)','2 oignons rouges émincés','2 gousses ail','1 càs sauce soja','Cumin, herbes de Provence','1 càs huile olive'],
+steps:['Oignons caramélisés : poêle feu très doux + huile + pincée sel. Remuer toutes les 3 min, 15–18 min. Ils doivent être dorés et fondants.','Assaisonner la dinde (sel, poivre, cumin, herbes). Poêle chaude, 5 min chaque côté.','Réchauffer lentilles + ail haché + 1 càs soja dans casserole, 3 min.','Dresser lentilles, dinde tranchée, oignons par-dessus.'],
+sauces:[{n:'Soja-sésame',d:'1 càs soja + ½ càc huile sésame. Sur la dinde.'},{n:'Tahiné-cumin',d:'1 càs tahiné + ½ càc cumin + jus ½ citron + eau + sel. Sur les lentilles.'},{n:'Fromage blanc-ail',d:'3 càs fromage blanc + ail râpé + persil + sel.'}],
+sw:['Dinde → blanc de poulet','Lentilles → haricots blancs']},
 ]},
-{cat:'Féculents',items:[
-{n:'Riz blanc long grain',q:'1 kg'},{n:'Quinoa',q:'400 g'},
-{n:'Flocons d\'avoine',q:'500 g'},{n:'Nouilles de riz',q:'250 g'},
-{n:'Galettes de riz nature',q:'×1 paquet'},{n:'Tortillas blé complet',q:'×1 paquet'},
-{n:'Pain de seigle tranché',q:'×1'},{n:'Graines de chia',q:'50 g'},
+{n:'J4',label:'Jour 4 — Jeudi',meals:[
+{l:'Petit-dej',bk:true,nocook:false,n:'Toast seigle + saumon fumé + œuf poché',d:'2 toasts, 80g saumon fumé, 1 œuf poché.',p:36,c:24,f:14,k:370,
+ing:['2 toasts pain de seigle','80g saumon fumé','1 œuf','Poivre'],
+steps:['Casserole d\'eau à frémissement (pas ébullition). Ajouter un trait de vinaigre blanc.','Casser l\'œuf dans un ramequin. Créer un tourbillon, glisser l\'œuf au centre.','Cuire 3 min — blanc pris, jaune coulant. Retirer avec écumoire.','Toaster le pain. Saumon puis œuf par-dessus. Poivrer.'],
+sauces:[{n:'Câpres-citron',d:'1 càc jus citron + sel. Verser sur le saumon.'}],
+sw:['Œuf poché → 2 œufs brouillés','Saumon fumé → poulet fumé']},
+{l:'Déjeuner',bk:false,nocook:true,n:'Salade poulet fumé + pois chiches + feta',d:'Poulet fumé, pois chiches, feta, salade.',p:46,c:28,f:16,k:445,
+ing:['10 tranches poulet fumé (~200g)','150g pois chiches égouttés','75g feta émiettée','Salade mélangée','100g tomates cerises'],
+steps:['Dresser la salade dans un bol.','Ajouter poulet, pois chiches, feta émiettée, tomates.','Arroser de sauce.'],
+sauces:[{n:'Tahiné-citron',d:'2 càs tahiné + jus 1 citron + 3 càs eau + sel.'},{n:'Vinaigrette soja-sésame',d:'1 càs soja + ½ càc sésame + ½ càc miel.'},{n:'Citron-huile olive',d:'Jus 1 citron + 1 càs huile olive + sel + poivre.'}],
+sw:['Poulet fumé → thon nature','Feta → amandes effilées']},
+{l:'Collation',bk:false,nocook:true,n:'Thon à la tomate + galettes riz',d:'1 boîte thon à la tomate, 3 galettes.',p:28,c:20,f:3,k:223,
+ing:['1 boîte thon à la tomate','3 galettes de riz'],
+steps:['Ouvrir, manger avec les galettes.'],
+sauces:[],sw:[]},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:false,n:'Blanc de poulet + pommes de terre + salade verte',d:'Pour 2. 300g poulet rôti, pommes de terre, salade.',p:52,c:44,f:10,k:478,
+ing:['300g blanc de poulet','400g pommes de terre en cubes','Salade mélangée','100g tomates cerises','Ail, herbes de Provence','1 càs huile olive'],
+steps:['Four à 200°C. Pommes de terre + ail + herbes + huile sur plaque. Enfourner 15 min.','Ajouter le poulet assaisonné sur la plaque. 25–30 min au total.','À mi-cuisson, arroser le poulet avec le jus de plaque.','Reposer 5 min, trancher. Servir avec salade fraîche.'],
+sauces:[{n:'Jus de cuisson réduit',d:'Jus de plaque dans casserole, réduire 2 min feu vif. Napper.'},{n:'Tahiné-herbes',d:'2 càs tahiné + jus ½ citron + persil + eau + sel.'},{n:'Fromage blanc-ail',d:'3 càs fromage blanc + ail râpé + herbes + sel + citron.'}],
+sw:['Poulet → escalope dinde']},
 ]},
-{cat:'Fruits & légumes',items:[
-{n:'Patates douces',q:'×4'},{n:'Brocolis',q:'400 g'},
-{n:'Poivrons (assortis)',q:'×4'},{n:'Courgettes',q:'×3'},
-{n:'Épinards frais (sachet)',q:'150 g'},{n:'Tomates cerises',q:'×2 barquettes'},
-{n:'Concombres',q:'×2'},{n:'Oignon rouge',q:'×2'},
-{n:'Carottes',q:'×4'},{n:'Panais',q:'×3'},
-{n:'Pommes de terre',q:'400 g'},{n:'Salade mélangée (sachet)',q:'×1'},
-{n:'Bananes',q:'×4'},{n:'Citrons',q:'×4'},
-{n:'Fraises',q:'200 g'},{n:'Myrtilles ou fruits rouges',q:'200 g'},
-{n:'Ail (tête)',q:'×1'},{n:'Gingembre frais',q:'1 morceau'},
+{n:'J5',label:'Jour 5 — Vendredi',meals:[
+{l:'Petit-dej',bk:true,nocook:true,n:'Overnight oats + fraises + amandes',d:'Préparé la veille. Flocons, lait, skyr, fraises.',p:36,c:58,f:12,k:490,
+ing:['80g flocons d\'avoine','200ml lait','150g skyr','100g fraises tranchées','20g amandes'],
+steps:['La veille : flocons + lait + skyr dans bocal. Réfrigérer.','Matin : fraises + amandes.'],
+sauces:[],sw:['Skyr → fromage blanc','Fraises → banane']},
+{l:'Déjeuner',bk:false,nocook:false,n:'Bowl thon tomate + riz + légumes sautés',d:'1 boîte thon tomate, riz batch, légumes.',p:44,c:48,f:6,k:430,
+ing:['1 boîte thon à la tomate','150g riz basmati cuit (batch)','200g légumes rustiques surgelés','1 gousse ail','½ càc huile sésame'],
+steps:['Légumes surgelés à la poêle avec ail + sésame, 5 min.','Réchauffer le riz 2 min micro-ondes.','Dresser riz, légumes, thon à la tomate. Arroser de sauce.'],
+sauces:[{n:'Soja-sésame',d:'1 càs soja + ½ càc sésame. Verser sur l\'ensemble.'},{n:'Citron-huile olive',d:'Jus ½ citron + 1 càs huile olive + sel.'}],
+sw:['Thon tomate → thon nature + tomates cerises']},
+{l:'Collation',bk:false,nocook:true,n:'Fromage blanc + banane + noix',d:'150g fromage blanc, 1 banane, 25g noix.',p:18,c:28,f:12,k:292,
+ing:['150g fromage blanc 0%','1 banane','25g noix'],
+steps:['Fromage blanc dans un bol. Banane + noix.'],
+sauces:[],sw:['Fromage blanc → yaourt protéiné']},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:false,n:'Haché bœuf + lentilles + poivrons rôtis',d:'Pour 2. 300g bœuf, lentilles, poivrons.',p:50,c:36,f:14,k:474,
+ing:['300g haché bœuf 5%','200g lentilles (boîte)','2 poivrons','1 oignon rouge','2 gousses ail','Cumin, paprika','1 càs huile olive'],
+steps:['Four 200°C. Poivrons + oignon + huile + sel sur plaque. Rôtir 20 min.','Ail + cumin + paprika dans poêle 30 sec. Ajouter bœuf, émietter, cuire 8–10 min feu vif.','Lentilles égouttées dans la poêle, mélanger, chauffer 3 min.','Dresser bœuf-lentilles, poivrons rôtis par-dessus.'],
+sauces:[{n:'Harissa-fromage blanc',d:'1 càc harissa + 3 càs fromage blanc + jus ½ citron. Servir froid à côté.'},{n:'Tahiné-citron',d:'2 càs tahiné + jus ½ citron + 2 càs eau + sel.'},{n:'Soja-ail',d:'1 càs soja + 1 gousse ail râpée + ½ càc sésame.'}],
+sw:['Bœuf → escalope dinde émincée']},
 ]},
-{cat:'Protéine & diététique',items:[
-{n:'Whey protéine (neutre ou vanille)',q:'×1 pot'},
+{n:'J6',label:'Jour 6 — Samedi',meals:[
+{l:'Petit-dej',bk:true,nocook:true,n:'Yaourt protéiné × 2 + banane + noix',d:'2 yaourts protéinés, 1 banane, 20g noix.',p:42,c:34,f:10,k:398,
+ing:['2 yaourts protéinés (190g chacun)','1 banane','20g noix'],
+steps:['Verser les yaourts dans un bol. Banane + noix.'],
+sauces:[],sw:['Yaourts → skyr + fromage blanc']},
+{l:'Déjeuner',bk:false,nocook:false,n:'Bowl dinde + nouilles riz + soja-sésame',d:'200g dinde, nouilles riz, légumes, sauce wok.',p:50,c:50,f:9,k:480,
+ing:['200g escalope de dinde','150g nouilles de riz sèches','200g légumes rustiques surgelés','2 càs sauce soja','½ càc huile sésame','1 gousse ail'],
+steps:['Cuire nouilles 3–4 min eau bouillante. Égoutter, rincer eau froide.','Légumes à la poêle feu vif + ail, 5 min.','Cuire la dinde, trancher. Mélanger tout dans le wok avec soja + sésame.'],
+sauces:[{n:'Soja-sésame',d:'2 càs soja + ½ càc sésame + ½ càc gingembre ou jus citron.'},{n:'Tahiné-soja crémeux',d:'1 càs tahiné + 1 càs soja + jus ½ citron + eau.'}],
+sw:['Dinde → blanc de poulet','Nouilles → quinoa']},
+{l:'Collation',bk:false,nocook:false,n:'Œufs durs + amandes',d:'3 œufs durs, 25g amandes.',p:24,c:2,f:18,k:270,
+ing:['3 œufs','25g amandes'],
+steps:['Eau froide → ébullition → 10 min chrono → eau froide immédiatement. Éplucher.','Manger avec amandes.'],
+sauces:[],sw:[]},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:true,n:'Saumon fumé + pois chiches + salade + feta',d:'Pour 2. 200g saumon fumé, pois chiches, feta. Zéro cuisson.',p:46,c:30,f:20,k:490,
+ing:['200g saumon fumé','200g pois chiches égouttés','75g feta émiettée','Salade mélangée','100g tomates cerises','½ concombre'],
+steps:['Dresser la salade dans 2 assiettes.','Répartir pois chiches, tomates, concombre tranché.','Poser le saumon fumé. Émietter la feta. Arroser de sauce.'],
+sauces:[{n:'Tahiné-citron',d:'2 càs tahiné + jus 1 citron + 3 càs eau + sel. Fouetter.'},{n:'Vinaigrette soja-sésame',d:'1 càs soja + ½ càc sésame + jus ½ citron + ½ càc miel.'}],
+sw:['Saumon fumé → cabillaud rôti 20 min 200°C']},
 ]},
-{cat:'Condiments & épicerie sèche',items:[
-{n:'Huile d\'olive vierge extra',q:'si besoin'},{n:'Sauce soja réduite en sel',q:'×1'},
-{n:'Huile de sésame',q:'petit flacon'},{n:'Tahiné',q:'petit pot'},
-{n:'Miel',q:'petit pot'},{n:'Amandes nature',q:'150 g'},
-{n:'Noix',q:'80 g'},{n:'Thym + romarin séchés',q:'si besoin'},
-{n:'Cumin moulu',q:'si besoin'},{n:'Cannelle moulue',q:'si besoin'},
-{n:'Herbes de Provence',q:'si besoin'},{n:'Sel de mer + poivre',q:'si besoin'},
+{n:'J7',label:'Jour 7 — Dimanche',meals:[
+{l:'Petit-dej',bk:true,nocook:true,n:'Overnight oats + banane + amandes',d:'Préparé sam soir. Flocons, lait, fromage blanc.',p:38,c:62,f:12,k:510,
+ing:['80g flocons d\'avoine','200ml lait','100g fromage blanc','1 banane','20g amandes'],
+steps:['La veille : flocons + lait + fromage blanc. Réfrigérer.','Matin : banane + amandes.'],
+sauces:[],sw:[]},
+{l:'Déjeuner',bk:false,nocook:false,n:'Bowl poulet + pois chiches + salade + tahiné',d:'200g poulet, pois chiches, salade.',p:52,c:32,f:10,k:435,
+ing:['200g blanc de poulet','150g pois chiches égouttés','Salade mélangée','100g tomates cerises','2 càs tahiné'],
+steps:['Cuire le poulet à la poêle 5 min chaque côté. Reposer 2 min, trancher.','Dresser salade, poulet, pois chiches, tomates. Sauce tahiné.'],
+sauces:[{n:'Tahiné-citron-soja',d:'2 càs tahiné + jus ½ citron + 1 càc soja + 3 càs eau + sel.'},{n:'Citron-huile olive',d:'Jus 1 citron + 1 càs huile olive + sel + poivre.'}],
+sw:['Poulet → saumon fumé (no-cook)','Pois chiches → haricots blancs']},
+{l:'Collation',bk:false,nocook:true,n:'Yaourt protéiné + fraises + noix',d:'1 yaourt protéiné, fraises, noix.',p:24,c:20,f:12,k:284,
+ing:['1 yaourt protéiné','100g fraises','25g noix'],
+steps:['Yaourt + fraises + noix.'],
+sauces:[],sw:[]},
+{l:'Dîner ×2',bk:false,dinner2:true,nocook:false,n:'Escalope de dinde + haricots blancs + légumes rôtis',d:'Pour 2. 350g dinde, haricots blancs, poivrons.',p:56,c:38,f:9,k:458,
+ing:['350g escalope de dinde','200g haricots blancs (boîte)','2 poivrons restants','1 oignon rouge','2 gousses ail','Herbes de Provence','1 càs huile olive'],
+steps:['Four 200°C. Poivrons + oignon + huile + herbes + sel sur plaque. Enfourner 20 min.','Dinde assaisonnée à la poêle, 5 min chaque côté.','Haricots blancs + ail + sel dans casserole, chauffer 3 min.','Dresser haricots, légumes rôtis, dinde tranchée.'],
+sauces:[{n:'Soja-miel-sésame',d:'1 càs soja + ½ càc miel + ½ càc sésame. Badigeonner la dinde.'},{n:'Fromage blanc-herbes',d:'3 càs fromage blanc + herbes + ail râpé + sel + citron.'},{n:'Tahiné-citron',d:'2 càs tahiné + jus ½ citron + eau + sel.'}],
+sw:['Dinde → blanc de poulet restant']},
 ]},
 ];
 
-const checked=new Set();
+// ─── BATCH ────────────────────────────────────────────────────────────────────
+const BATCH=[
+{t:'Blanc de poulet — cuire tout en une fois',d:'Couvre les déjeuners J1 J7 + dîners J4',
+steps:['Sortir le poulet 15 min avant — cuisson plus uniforme.','Four à 200°C chaleur tournante.','Filets sur plaque + papier cuisson. Ne pas superposer.','Assaisonner : sel, poivre, ail en poudre, filet huile olive.','Cuire 22–25 min selon épaisseur. Jus clair à la pique = cuit.','Reposer 5 min avant de trancher — le jus se redistribue.','Portionner : 200g pour déj J1, 200g pour déj J7, 300g pour dîner J4 (×2).','Boîtes hermétiques. Frigo 4 jours max.'],
+u:['Déjeuner J1','Déjeuner J7','Dîner J4 (×2)']},
+{t:'Bocaux overnight oats — ×2 chaque prep',d:'Dimanche soir + mercredi soir',
+steps:['Prendre 2 bocaux de 400–500ml avec couvercle (bocaux confiture ou Le Parfait).','Dans chaque bocal : 80g flocons + 200ml lait + 100g fromage blanc (ou 150g skyr).','Mélanger vigoureusement à la fourchette.','Fermer, réfrigérer. Prêts dès le lendemain matin.','Le matin : ajouter UNIQUEMENT les fruits frais au moment de manger — jamais la veille, ils rendraient de l\'eau.','Durée max : 48h au frigo.'],
+u:['Petit-dej J1','Petit-dej J3 (mer soir)','Petit-dej J5','Petit-dej J7']},
+{t:'Quinoa — 300g sec (batch complet)',d:'Couvre déjeuners J3 + J4',
+steps:['Rincer dans passoire fine sous eau froide 1–2 min — élimine la saponine (goût amer).','Casserole : 300g quinoa + 600ml eau + 1 pincée sel.','Porter à ébullition, réduire feu très doux, couvrir. 15 min.','Éteindre. Laisser reposer couvert 5 min sans soulever.','Égrainer à la fourchette — les petits germes blancs doivent être visibles.','Refroidir à l\'air libre avant de fermer. Frigo 5 jours.'],
+u:['Déjeuner J3','Option J4']},
+{t:'Riz basmati — 400g sec',d:'Couvre déjeuners J1 + J5 + J2',
+steps:['Rincer 3 fois à l\'eau froide jusqu\'à eau claire.','Casserole : 400g riz + 600ml eau + 1 càc sel.','Porter à ébullition, couvrir, feu très doux. 12 min.','Éteindre. Reposer couvert 5 min. Ne pas soulever pendant ce temps.','Égrainer doucement à la fourchette.','Refroidir avant de fermer. Frigo 4 jours.'],
+u:['Déjeuner J1','Déjeuner J2','Déjeuner J5']},
+{t:'Œufs durs — lot de 8',d:'Collation J6 + réserve grab-and-go',
+steps:['Sortir les œufs 10 min avant du frigo — évite les chocs thermiques et les fissures.','Placer dans casserole. Couvrir eau froide (+2 cm).','Porter à ébullition feu vif.','Dès ébullition : feu moyen, minuteur 10 min.','Pendant ce temps : préparer bol d\'eau froide avec glaçons.','À la fin : égoutter, plonger immédiatement dans l\'eau froide 5 min.','Éplucher ou conserver avec coquille (conservation plus longue).','Boîte hermétique au frigo. 5 jours max.'],
+u:['Collation J6','Grab-and-go toute la semaine']},
+];
+
+// ─── SHOPPING ─────────────────────────────────────────────────────────────────
+const SHOPPING=[
+{cat:'Protéines',items:[
+{n:'Blanc de poulet',q:'1 kg',key:'blanc_poulet'},
+{n:'Escalope de dinde',q:'500g',key:'escalope_dinde'},
+{n:'Cabillaud ou sole tropicale',q:'400g',key:'cabillaud'},
+{n:'Thon au naturel',q:'4 boîtes',key:'thon_nature'},
+{n:'Saumon fumé',q:'200g',key:'saumon_fume'},
+]},
+{cat:'Laitiers',items:[
+{n:'Fromage blanc 0%',q:'1 kg',key:'fromage_blanc'},
+{n:'Yaourts protéinés',q:'×6',key:'yaourts_prot'},
+{n:'Skyr',q:'500g',key:'skyr'},
+]},
+{cat:'Légumes',items:[
+{n:'Légumes rustiques surgelés',q:'2 kg',key:'legumes_rustiques'},
+{n:'Poivrons',q:'×4',key:'poivrons'},
+{n:'Salade mélangée',q:'400g',key:'salade'},
+{n:'Tomates cerises',q:'500g',key:'tomates_cerises'},
+]},
+{cat:'Légumineuses',items:[
+{n:'Pois chiches en boîte',q:'×2',key:'pois_chiches'},
+{n:'Lentilles en boîte',q:'×2',key:'lentilles'},
+]},
+{cat:'Féculents',items:[
+{n:'Riz basmati',q:'1 kg',key:'riz'},
+{n:'Flocons d\'avoine',q:'1 kg',key:'flocons'},
+{n:'Wraps blé complet',q:'×8',key:'wraps'},
+]},
+{cat:'Oléagineux & fruits',items:[
+{n:'Amandes',q:'500g',key:'amandes'},
+{n:'Noix',q:'500g',key:'noix'},
+{n:'Bananes',q:'2 kg',key:'bananes'},
+{n:'Fraises',q:'500g',key:'fraises'},
+]},
+];
+
+// ─── RENDER ────────────────────────────────────────────────────────────────────
 const tabs=document.getElementById('tabs');
 const cont=document.getElementById('cont');
-
-function togglePanel(id){
-  const p=document.getElementById(id);
-  const btn=document.querySelector('[data-panel="'+id+'"]');
-  const isOpen=p.classList.contains('on');
-  p.classList.toggle('on',!isOpen);
-  if(btn) btn.textContent=isOpen?'Voir la recette':'Masquer';
-}
-
-function toggleSwap(id){
-  const p=document.getElementById(id);
-  const btn=document.querySelector('[data-swap="'+id+'"]');
-  const isOpen=p.classList.contains('on');
-  p.classList.toggle('on',!isOpen);
-  if(btn) btn.textContent=isOpen?'Substitutions':'Masquer';
-}
-
-function toggleCheck(key,el,txtEl){
-  if(checked.has(key)){checked.delete(key);}else{checked.add(key);}
-  el.classList.toggle('on',checked.has(key));
-  txtEl.classList.toggle('done',checked.has(key));
-  updateProgress();
-}
-
-function updateProgress(){
-  const total=SHOP.reduce((a,c)=>a+c.items.length,0);
-  const done=checked.size;
-  const pct=total?Math.round(done/total*100):0;
-  const fill=document.getElementById('pfill');
-  const txt=document.getElementById('ptxt');
-  if(fill) fill.style.width=pct+'%';
-  if(txt) txt.textContent=done+'/'+total+' articles';
-}
+const checked=new Set();
 
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   document.getElementById('tab-'+id).classList.add('on');
+  if(id==='shop') renderShop();
 }
 
-D.forEach((day,di)=>{
+function togglePanel(id){
+  const p=document.getElementById(id),b=document.querySelector(`[data-pid="${id}"]`);
+  const o=p.classList.toggle('on');
+  if(b) b.textContent=o?'Masquer':'Recette';
+}
+function toggleSauce(id){
+  const p=document.getElementById(id),b=document.querySelector(`[data-ssid="${id}"]`);
+  const o=p.classList.toggle('on');
+  if(b) b.textContent=o?'Masquer':'Sauces';
+}
+function toggleSwap(id){
+  const p=document.getElementById(id),b=document.querySelector(`[data-swid="${id}"]`);
+  const o=p.classList.toggle('on');
+  if(b) b.textContent=o?'Masquer':'Substitutions';
+}
+
+DAYS.forEach((day,di)=>{
   const tab=document.createElement('button');
   tab.className='tab';tab.id='tab-day'+di;
-  tab.textContent=day.n;
-  tab.onclick=()=>showView('day'+di);
+  tab.textContent=day.n;tab.onclick=()=>showView('day'+di);
   tabs.appendChild(tab);
-
-  const view=document.createElement('div');
-  view.className='view';view.id='day'+di;
-  const grid=document.createElement('div');
-  grid.className='meals';
-
+  const view=document.createElement('div');view.className='view';view.id='day'+di;
+  const dl=document.createElement('div');dl.className='day-label';dl.textContent=day.label;view.appendChild(dl);
+  const grid=document.createElement('div');grid.className='meals';
   let tP=0,tC=0,tF=0,tK=0;
   day.meals.forEach((m,mi)=>{
-    if(m.l!=='Batch cook'){tP+=m.p;tC+=m.c;tF+=m.f;tK+=m.k;}
-    const rid='r'+di+'_'+mi,sid='s'+di+'_'+mi;
-    const badge=m.b==='nocook'?'<span class="pill pbadge">0-cook</span>':m.b==='batch'?'<span class="pill pbatch">from batch</span>':m.pr?'<span class="pill pprep">'+m.pr+'</span>':'';
-    const hasR=m.ing&&m.ing.length>0;
-    const hasS=m.sw&&m.sw.length>0;
-    const isBK=m.l==='Petit-dej';
+    tP+=m.p;tC+=m.c;tF+=m.f;tK+=m.k;
+    const rid='r'+di+'_'+mi,sauid='sa'+di+'_'+mi,swid='sw'+di+'_'+mi;
     const card=document.createElement('div');
-    card.className='card'+(isBK?' bk':'');
-    let html='<div class="card-top"><div class="row"><span class="mlabel">'+m.l+'</span><div style="display:flex;gap:5px">'+badge+'</div></div>';
-    html+='<div class="mname">'+m.n+'</div><div class="mdesc">'+m.d+'</div>';
-    if(m.l!=='Batch cook') html+='<div class="macros"><span class="mac mp">Protéines '+m.p+'g</span><span class="mac mc">Glucides '+m.c+'g</span><span class="mac mf">Lipides '+m.f+'g</span><span class="mac mk">'+m.k+' kcal</span></div>';
-    html+='<div class="pill-row">';
-    if(hasR) html+='<button class="pill precipe" data-panel="'+rid+'" onclick="togglePanel(\''+rid+'\')">Voir la recette</button>';
-    if(hasS) html+='<button class="pill pswap" data-swap="'+sid+'" onclick="toggleSwap(\''+sid+'\')">Substitutions</button>';
-    html+='</div></div>';
-    if(hasR){
-      html+='<div class="panel" id="'+rid+'"><div class="ptitle">Ingrédients</div><ul class="ilist">'+m.ing.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
-      html+='<div class="ptitle">Étapes</div><ol class="slist">'+m.steps.map((s,si)=>'<li><span class="snum">'+(si+1)+'</span>'+s+'</li>').join('')+'</ol></div>';
+    let cls='card';if(m.bk)cls+=' bk';if(m.dinner2)cls+=' dinner2';
+    card.className=cls;
+    let h='<div class="card-top"><div class="mrow"><span class="mlabel">'+m.l+'</span><div class="badges">';
+    if(m.nocook)h+='<span class="pill pbadge">0-cook</span>';
+    if(m.dinner2)h+='<span class="pill p2">×2 pers.</span>';
+    h+='</div></div>';
+    h+='<div class="mname">'+m.n+'</div><div class="mdesc">'+m.d+'</div>';
+    h+='<div class="macros"><span class="mac mp">'+m.p+'g prot.</span><span class="mac mc">'+m.c+'g gluc.</span><span class="mac mf">'+m.f+'g lip.</span><span class="mac mk">'+m.k+' kcal</span></div>';
+    h+='<div class="pill-row">';
+    if(m.ing&&m.ing.length)h+=`<button class="pill pr" data-pid="${rid}" onclick="togglePanel('${rid}')">Recette</button>`;
+    if(m.sauces&&m.sauces.length)h+=`<button class="pill psauce" data-ssid="${sauid}" onclick="toggleSauce('${sauid}')">Sauces</button>`;
+    if(m.sw&&m.sw.length)h+=`<button class="pill ps" data-swid="${swid}" onclick="toggleSwap('${swid}')">Substitutions</button>`;
+    h+='</div></div>';
+    if(m.ing&&m.ing.length){
+      h+=`<div class="panel" id="${rid}"><div class="ptitle">Ingrédients</div><ul class="ilist">${m.ing.map(i=>'<li>'+i+'</li>').join('')}</ul>`;
+      h+=`<div class="ptitle">Étapes</div><ol class="slist">${m.steps.map((s,si)=>`<li><span class="snum">${si+1}</span>${s}</li>`).join('')}</ol></div>`;
     }
-    if(hasS){
-      html+='<div class="panel" id="'+sid+'"><div class="ptitle">Options de substitution</div><div class="swaplist">'+m.sw.map(s=>'<div class="swapitem">'+s+'</div>').join('')+'</div></div>';
+    if(m.sauces&&m.sauces.length){
+      h+=`<div class="panel" id="${sauid}"><div class="ptitle">Options de sauce</div><div class="sauce-list">${m.sauces.map(s=>`<div class="sauce-item"><div class="sauce-name">${s.n}</div><div class="sauce-desc">${s.d}</div></div>`).join('')}</div></div>`;
     }
-    card.innerHTML=html;
-    grid.appendChild(card);
+    if(m.sw&&m.sw.length){
+      h+=`<div class="panel" id="${swid}"><div class="ptitle">Substitutions</div><div class="swaplist">${m.sw.map(s=>'<div class="swapitem">'+s+'</div>').join('')}</div></div>`;
+    }
+    card.innerHTML=h;grid.appendChild(card);
   });
-
   view.appendChild(grid);
-  if(tK>0) view.innerHTML+=`<div class="totals"><div class="ti"><span class="tl">Protéines</span><span class="tv">${tP}g</span></div><div class="ti"><span class="tl">Glucides</span><span class="tv">${tC}g</span></div><div class="ti"><span class="tl">Lipides</span><span class="tv">${tF}g</span></div><div class="ti"><span class="tl">Total</span><span class="tv">${tK} kcal</span></div></div>`;
+  view.innerHTML+=`<div class="totals"><div class="ti"><span class="tl">Protéines</span><span class="tv">${tP}g</span></div><div class="ti"><span class="tl">Glucides</span><span class="tv">${tC}g</span></div><div class="ti"><span class="tl">Lipides</span><span class="tv">${tF}g</span></div><div class="ti"><span class="tl">Kcal</span><span class="tv">${tK}</span></div></div>`;
   cont.appendChild(view);
 });
 
-const batchTab=document.createElement('button');
-batchTab.className='tab t-batch';batchTab.id='tab-batch';
-batchTab.textContent='Batch';batchTab.onclick=()=>showView('batch');
-tabs.appendChild(batchTab);
-
-const bv=document.createElement('div');
-bv.className='view';bv.id='batch';
-let bhtml='<div class="tip">Deux sessions par semaine — dimanche (~70 min) et mercredi (~20 min). Tout ce qui est tagué "from batch" vient d\'ici.</div>';
-bhtml+='<div class="bsec"><div class="btitle">Dimanche — ~60–75 min</div>';
-BP.sun.forEach(b=>{bhtml+=`<div class="bc"><div class="bct">${b.t}</div><div class="bcd">${b.d}</div><div class="tags">${b.u.map(u=>'<span class="utag">'+u+'</span>').join('')}</div></div>`;});
-bhtml+='</div><div class="bsec"><div class="btitle">Mercredi — ~20 min</div>';
-BP.wed.forEach(b=>{bhtml+=`<div class="bc"><div class="bct">${b.t}</div><div class="bcd">${b.d}</div><div class="tags">${b.u.map(u=>'<span class="utag">'+u+'</span>').join('')}</div></div>`;});
-bhtml+='</div>';
-bv.innerHTML=bhtml;
-cont.appendChild(bv);
-
-const shopTab=document.createElement('button');
-shopTab.className='tab t-shop';shopTab.id='tab-shop';
-shopTab.textContent='Courses';shopTab.onclick=()=>showView('shop');
-tabs.appendChild(shopTab);
-
-const sv=document.createElement('div');
-sv.className='view';sv.id='shop';
-let shtml='<div class="prog-row"><div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div><span class="prog-txt" id="ptxt">0/'+SHOP.reduce((a,c)=>a+c.items.length,0)+' articles</span><button class="clr-btn" onclick="clearAll()">Effacer</button></div>';
-SHOP.forEach((cat,ci)=>{
-  shtml+='<div class="scat"><div class="scat-title">'+cat.cat+'</div>';
-  cat.items.forEach((item,ii)=>{
-    const key=ci+'_'+ii;
-    shtml+=`<div class="sitem" onclick="toggleCheck('${key}',document.getElementById('cb${key}'),document.getElementById('tx${key}'))"><div class="scb" id="cb${key}"></div><span class="stxt" id="tx${key}">${item.n}</span><span class="sqty">${item.q}</span></div>`;
-  });
-  shtml+='</div>';
+// Batch tab
+const bTab=document.createElement('button');
+bTab.className='tab t-batch';bTab.id='tab-batch';bTab.textContent='Batch';bTab.onclick=()=>showView('batch');
+tabs.appendChild(bTab);
+const bv=document.createElement('div');bv.className='view';bv.id='batch';
+let bh='<div class="tip">Dimanche (~65 min, surtout temps de cuisson) + mercredi restock overnight oats (~10 min). Tout ce qui est tagué "from batch" dans le plan vient d\'ici.</div>';
+BATCH.forEach((b,bi)=>{
+  bh+=`<div class="bc"><div class="bct">${b.t}</div><div class="bcd">${b.d}</div><ol class="bsteps">${b.steps.map((s,i)=>`<li><span class="snum">${i+1}</span>${s}</li>`).join('')}</ol><div class="tags">${b.u.map(u=>'<span class="utag">'+u+'</span>').join('')}</div></div>`;
 });
-sv.innerHTML=shtml;
-cont.appendChild(sv);
+bv.innerHTML=bh;cont.appendChild(bv);
 
-function clearAll(){checked.clear();document.querySelectorAll('.scb').forEach(e=>e.classList.remove('on'));document.querySelectorAll('.stxt').forEach(e=>e.classList.remove('done'));updateProgress();}
+// Stock tab
+const stTab=document.createElement('button');
+stTab.className='tab t-stock';stTab.id='tab-stock';stTab.textContent='Stock';stTab.onclick=()=>showView('stock');
+tabs.appendChild(stTab);
+const stv=document.createElement('div');stv.className='view';stv.id='stock';
+
+function buildStockView(){
+  const cats=[...new Set(Object.values(STOCK).map(v=>v[3]))];
+  let h='<div class="stock-hdr">Ajuste ton stock en temps réel avec les boutons + / −. La liste de courses se met à jour automatiquement selon les niveaux.</div>';
+  cats.forEach(cat=>{
+    h+=`<div class="scat-title">${cat}</div>`;
+    Object.entries(STOCK).forEach(([key,v])=>{
+      if(v[3]!==cat) return;
+      const [cur,max,unit,,name]=v;
+      const pct=Math.min(100,Math.round(cur/max*100));
+      const barCol=cur<=0?'#e5e5ea':pct<=25?'#EF4444':pct<=50?'#F59E0B':'#22C55E';
+      const valCls=cur<=0?'empty':pct<=25?'low':'';
+      h+=`<div class="stock-row">
+        <div class="stock-left">
+          <div class="stock-name">${name}</div>
+          <div class="prog-mini"><div class="prog-mini-fill" id="bar_${key}" style="width:${pct}%;background:${barCol}"></div></div>
+        </div>
+        <div class="stock-ctrl">
+          <button class="sc-btn" onclick="adjStock('${key}',-1)">−</button>
+          <div style="text-align:center;min-width:44px">
+            <div class="sc-val ${valCls}" id="val_${key}">${cur}</div>
+            <div class="sc-unit">${unit}</div>
+          </div>
+          <button class="sc-btn" onclick="adjStock('${key}',1)">+</button>
+        </div>
+      </div>`;
+    });
+  });
+  stv.innerHTML=h;
+}
+
+function adjStock(key,dir){
+  const step=STEP[key]||1;
+  STOCK[key][0]=Math.max(0,STOCK[key][0]+(dir*step));
+  const [cur,max,unit]=STOCK[key];
+  const pct=Math.min(100,Math.round(cur/max*100));
+  const barCol=cur<=0?'#e5e5ea':pct<=25?'#EF4444':pct<=50?'#F59E0B':'#22C55E';
+  const valCls=cur<=0?'empty':pct<=25?'low':'';
+  const ve=document.getElementById('val_'+key);
+  const be=document.getElementById('bar_'+key);
+  if(ve){ve.textContent=cur;ve.className='sc-val '+valCls;}
+  if(be){be.style.width=pct+'%';be.style.background=barCol;}
+  if(document.getElementById('shop').classList.contains('on')) renderShop();
+}
+buildStockView();
+cont.appendChild(stv);
+
+// Shop tab
+const shTab=document.createElement('button');
+shTab.className='tab t-shop';shTab.id='tab-shop';shTab.textContent='Courses';shTab.onclick=()=>showView('shop');
+tabs.appendChild(shTab);
+const shv=document.createElement('div');shv.className='view';shv.id='shop';
+cont.appendChild(shv);
+
+function renderShop(){
+  const total=SHOPPING.reduce((a,c)=>a+c.items.length,0);
+  const done=checked.size;
+  const pct=total?Math.round(done/total*100):0;
+
+  let urgentItems=[],soonItems=[];
+  SHOPPING.forEach(cat=>cat.items.forEach(item=>{
+    if(!item.key||!STOCK[item.key]) return;
+    const [cur,max]=STOCK[item.key];
+    const p=cur/max;
+    if(p<=0) urgentItems.push(item.n);
+    else if(p<=0.25) urgentItems.push(item.n);
+    else if(p<=0.5) soonItems.push(item.n);
+  }));
+
+  let h=`<div class="prog-row"><div class="prog-bar"><div class="prog-fill" id="pfill" style="width:${pct}%"></div></div><span class="prog-txt">${done}/${total} cochés</span><button class="clr-btn" onclick="clearAll()">Effacer</button></div>`;
+
+  if(urgentItems.length===0&&soonItems.length===0){
+    h+='<div class="shop-ok">✓ Tous les stocks sont suffisants. Rien d\'urgent à acheter.</div>';
+  } else {
+    if(urgentItems.length) h+=`<div class="shop-alert"><strong>⚠ À acheter en urgence :</strong> ${urgentItems.join(', ')}</div>`;
+    if(soonItems.length) h+=`<div class="shop-alert" style="background:#FFFBEB;border-color:#FDE68A;color:#92400E"><strong>Bientôt en rupture :</strong> ${soonItems.join(', ')}</div>`;
+  }
+
+  SHOPPING.forEach((cat,ci)=>{
+    h+=`<div class="shop-cat-title">${cat.cat}</div>`;
+    cat.items.forEach((item,ii)=>{
+      const k=`${ci}_${ii}`;
+      let badge='';
+      if(item.key&&STOCK[item.key]){
+        const [cur,max]=STOCK[item.key];
+        const p=cur/max;
+        if(p<=0.25) badge='<span class="badge-urgent">urgent</span>';
+        else if(p<=0.5) badge='<span class="badge-soon">bientôt</span>';
+      }
+      const ck=checked.has(k);
+      h+=`<div class="sitem" onclick="toggleCheck('${k}')">
+        <div class="scb${ck?' on':''}" id="cb_${k}"></div>
+        <span class="stxt${ck?' done':''}" id="tx_${k}">${item.n}</span>
+        <div style="display:flex;align-items:center;gap:4px">${badge}<span class="sqty">${item.q}</span></div>
+      </div>`;
+    });
+  });
+  shv.innerHTML=h;
+}
+
+function toggleCheck(k){
+  if(checked.has(k))checked.delete(k);else checked.add(k);
+  renderShop();
+}
+function clearAll(){checked.clear();renderShop();}
 
 showView('day0');
 </script>
+</body>
+</html>
